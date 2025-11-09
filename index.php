@@ -47,6 +47,7 @@
                 new Product("Tablet", 35000),
                 new Product("Headphones", 10000)
             ];
+            $_SESSION['products_created'] = true;
         }
 
         $products = &$_SESSION['products'];
@@ -63,6 +64,50 @@
             $foundProduct = Product::searchByName($products, $searchName);
         }
 
+        class Category
+        {
+            public $name;
+            public $list_products;
+
+            public function __construct($name, $list_products)
+            {
+                $this->name = $name;
+                $this->list_products = $list_products;
+            }
+
+            public function getCategoryName()
+            {
+                return $this->name;
+            }
+
+            public function getCategoryProducts()
+            {
+                return $this->list_products;
+            }
+        }
+
+        if (!isset($_SESSION['categories'])) {
+            $_SESSION['categories'] = [];
+        }
+
+        $categories = &$_SESSION['categories'];
+
+        if (isset($_POST['add_category'])) {
+            $categoryName = $_POST['category_name'];
+
+            $newCategory = new Category($categoryName, $products);
+
+            $categories[] = $newCategory;
+
+            $products = [];
+            $_SESSION['products'] = [];
+        }
+
+        if (isset($_POST["clear_session"])) {
+            session_destroy();
+            session_start();
+        }
+
         ?>
 
         <h2 class="my-4">Add new product</h2>
@@ -70,34 +115,36 @@
         <div class="row border rounded p-4">
             <form method="POST" class="col-md-10 d-flex flex-column">
                 <div class="mb-2">
-                    <label for="name" style="width: 120px;">Product name</label>
+                    <label for="name" style="width: 200px;">Product name</label>
                     <input type="text" name="name" placeholder="Enter name">
                 </div>
                 <div class="mb-2">
-                    <label for="price" style="width: 120px;">Product price</label>
+                    <label for="price" style="width: 200px;">Product price</label>
                     <input type="text" name="price" placeholder="Enter price">
                 </div>
                 <button type="submit" name="add" class="col-3 mt-3 btn btn-sm btn-secondary">Add</button>
             </form>
         </div>
 
-        <?php if (isset($_POST["add"])) : ?>
-            <div class="mt-4">
-                <h3 class="mb-4">Product list:</h3>
+        <div class="mt-4">
+            <h3 class="mb-4">Product list:</h3>
+            <?php if (empty($products)) : ?>
+                <div class="text-muted">Empty list</div>
+            <?php else : ?>
                 <?php foreach ($products as $product) : ?>
                     <div class="border rounded p-2 mb-2">
                         <?= $product->getProduct() ?>
                     </div>
                 <?php endforeach; ?>
-            </div>
-        <?php endif; ?>
+            <?php endif; ?>
+        </div>
 
         <h2 class="my-4">Found product</h2>
 
         <div class="row my-4 border rounded p-4">
             <form method="POST" class="col-md-10 d-flex flex-column">
                 <div class="mb-2">
-                    <label for="searchName" style="width: 120px;">Search product by name</label>
+                    <label for="search_name" style="width:200px;">Search product by name</label>
                     <input type="text" name="search_name" placeholder="Enter product name">
                 </div>
                 <button type="submit" name="search" class="col-3 mt-3 btn btn-sm btn-secondary">Search</button>
@@ -118,6 +165,40 @@
                 <?php endif; ?>
             </div>
         <?php endif; ?>
+
+        <h2 class="my-4">Categories</h2>
+
+        <div class="row my-4 border rounded p-4">
+            <form method="POST" class="col-md-10 d-flex flex-column">
+                <div class="mb-2">
+                    <label for="category_name" style="width: 200px;">Category name</label>
+                    <input type="text" name="category_name" placeholder="Enter category name">
+                </div>
+                <button type="submit" name="add_category" class="col-3 mt-3 btn btn-sm btn-secondary">Add category</button>
+            </form>
+        </div>
+
+        <?php if (isset($_POST["add_category"])) : ?>
+            <div class="my-4">
+                <h3 class="mb-4">Category list:</h3>
+                <?php foreach ($categories as $category) : ?>
+                    <div class="border rounded p-3 mb-3">
+                        <h5><?= $category->getCategoryName() ?></h5>
+                        <?php foreach ($category->getCategoryProducts() as $product) : ?>
+                            <div class="p-2 mb-2 ms-3">
+                                <?= $product->getProduct() ?>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+
+        <div class="row my-4">
+            <form method="POST" class="col-md-10 d-flex flex-column">
+                <button type="submit" name="clear_session" class="col-3 mt-3 btn btn-danger">Clear Session</button>
+            </form>
+        </div>
 
     </div>
 </body>
