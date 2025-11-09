@@ -145,9 +145,9 @@
 
         ?>
 
-        <h2 class="my-4">Add new product</h2>
+        <h2 class="my-4 text-primary">Add new product</h2>
 
-        <div class="row border rounded p-4">
+        <div class="row border border-primary rounded p-4">
             <form method="POST" class="col-md-10 d-flex flex-column">
                 <div class="mb-2">
                     <label for="name" style="width: 200px;">Product name</label>
@@ -157,67 +157,67 @@
                     <label for="price" style="width: 200px;">Product price</label>
                     <input type="text" name="price" placeholder="Enter price">
                 </div>
-                <button type="submit" name="add" class="col-3 mt-3 btn btn-sm btn-secondary">Add</button>
+                <button type="submit" name="add" class="col-3 mt-3 btn btn-sm btn-primary">Add</button>
             </form>
         </div>
 
         <div class="mt-4">
-            <h3 class="mb-4">Product list:</h3>
+            <h4 class="mb-4">Product list:</h4>
             <?php if (empty($products)) : ?>
                 <div class="text-muted">Empty list</div>
             <?php else : ?>
                 <?php foreach ($products as $product) : ?>
-                    <div class="border rounded p-2 mb-2">
+                    <div class="border border-primary rounded p-2 mb-2">
                         <?= $product->getProduct() ?>
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?>
         </div>
 
-        <h2 class="my-4">Found product</h2>
+        <h2 class="my-4 text-success">Found product</h2>
 
-        <div class="row my-4 border rounded p-4">
+        <div class="row my-4 border border-success rounded p-4">
             <form method="POST" class="col-md-10 d-flex flex-column">
                 <div class="mb-2">
                     <label for="search_name" style="width:200px;">Search product by name</label>
                     <input type="text" name="search_name" placeholder="Enter product name">
                 </div>
-                <button type="submit" name="search" class="col-3 mt-3 btn btn-sm btn-secondary">Search</button>
+                <button type="submit" name="search" class="col-3 mt-3 btn btn-sm btn-success">Search</button>
             </form>
         </div>
 
         <?php if (isset($_POST["search"])) : ?>
             <div class="my-4">
-                <h3 class="mb-4">Search result:</h3>
+                <h4 class="mb-4">Search result:</h4>
                 <?php if ($foundProduct !== null) : ?>
-                    <div class="border rounded p-2 mb-2 bg-light">
+                    <div class="border border-success rounded p-2 mb-2">
                         <?= $foundProduct->getProduct() ?>
                     </div>
                 <?php else : ?>
-                    <div class="text-danger">
+                    <div class="text-danger border rounded p-2">
                         Product "<?= $searchName ?>" not found
                     </div>
                 <?php endif; ?>
             </div>
         <?php endif; ?>
 
-        <h2 class="my-4">Categories</h2>
+        <h2 class="my-4 text-info">Categories</h2>
 
-        <div class="row my-4 border rounded p-4">
+        <div class="row my-4 border border-info rounded p-4">
             <form method="POST" class="col-md-10 d-flex flex-column">
                 <div class="mb-2">
                     <label for="category_name" style="width: 200px;">Category name</label>
                     <input type="text" name="category_name" placeholder="Enter category name">
                 </div>
-                <button type="submit" name="add_category" class="col-3 mt-3 btn btn-sm btn-secondary">Add category</button>
+                <button type="submit" name="add_category" class="col-3 mt-3 btn btn-sm btn-info btn-secondary">Add category</button>
             </form>
         </div>
 
         <?php if (isset($_POST["add_category"])) : ?>
             <div class="my-4">
-                <h3 class="mb-4">Category list:</h3>
+                <h4 class="mb-4">Category list:</h4>
                 <?php foreach ($categories as $category) : ?>
-                    <div class="border rounded p-3 mb-3">
+                    <div class="border border-info rounded p-3 mb-3">
                         <h5><?= $category->getCategoryName() ?></h5>
                         <?php foreach ($category->getCategoryProducts() as $product) : ?>
                             <div class="p-2 mb-2 ms-3">
@@ -230,7 +230,7 @@
         <?php endif; ?>
 
         <div class="mt-4">
-            <h3 class="mb-4">All categories:</h3>
+            <h4 class="mb-4">All categories:</h4>
             <?php if (empty($categories)) : ?>
                 <div class="text-muted">Empty list</div>
             <?php else : ?>
@@ -246,9 +246,9 @@
 
         <?php if ($selectedCategory !== null) : ?>
             <div class="mt-4">
-                <h3 class="mb-4">Products in category "<?= $selectedCategory->getCategoryName() ?>":</h3>
+                <h4 class="mb-4">Products in category "<?= $selectedCategory->getCategoryName() ?>":</h4>
                 <?php foreach ($selectedCategory->getCategoryProducts() as $product) : ?>
-                    <div class="border rounded p-2 mb-2">
+                    <div class="border border-warning rounded p-2 mb-2">
                         <?= $product->getProduct() ?>
                     </div>
                 <?php endforeach; ?>
