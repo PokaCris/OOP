@@ -84,6 +84,16 @@
             {
                 return $this->list_products;
             }
+
+            public static function searchByName($categories, $searchName)
+            {
+                foreach ($categories as $category) {
+                    if ($category->name === $searchName) {
+                        return $category;
+                    }
+                }
+                return null;
+            }
         }
 
         if (!isset($_SESSION['categories'])) {
@@ -106,6 +116,14 @@
         if (isset($_POST["clear_session"])) {
             session_destroy();
             session_start();
+        }
+
+        $selectedCategory = null;
+        if (isset($_GET['category'])) {
+            $categoryIndex = $_GET['category'];
+            if (isset($categories[$categoryIndex])) {
+                $selectedCategory = $categories[$categoryIndex];
+            }
         }
 
         ?>
@@ -189,6 +207,32 @@
                                 <?= $product->getProduct() ?>
                             </div>
                         <?php endforeach; ?>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+
+        <div class="mt-4">
+            <h3 class="mb-4">All categories:</h3>
+            <?php if (empty($categories)) : ?>
+                <div class="text-muted">Empty list</div>
+            <?php else : ?>
+                <div class="list-group">
+                    <?php foreach ($categories as $index => $category) : ?>
+                        <a href="?category=<?= $index ?>" class="list-group-item list-group-item-action">
+                            <?= $category->getCategoryName() ?>
+                        </a>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <?php if ($selectedCategory !== null) : ?>
+            <div class="mt-4">
+                <h3 class="mb-4">Products in category "<?= $selectedCategory->getCategoryName() ?>":</h3>
+                <?php foreach ($selectedCategory->getCategoryProducts() as $product) : ?>
+                    <div class="border rounded p-2 mb-2">
+                        <?= $product->getProduct() ?>
                     </div>
                 <?php endforeach; ?>
             </div>
