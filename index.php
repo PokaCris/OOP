@@ -57,6 +57,10 @@
             $price = $_POST["price"];
 
             $products[] = new Product($name, $price);
+
+            // чтобы при перезагрузке страницы продукт не добавлялся повторно
+            header("Location: " . $_SERVER['PHP_SELF']);
+            exit;
         }
 
         if (isset($_POST["search"])) {
@@ -104,10 +108,23 @@
 
         if (isset($_POST['add_category'])) {
             $categoryName = $_POST['category_name'];
+            $existingCategory = null;
 
-            $newCategory = new Category($categoryName, $products);
+            foreach ($categories as $category) {
+                if ($category->name === $categoryName) {
+                    $existingCategory = $category;
+                    break;
+                }
+            }
 
-            $categories[] = $newCategory;
+            if ($existingCategory !== null) {
+                foreach ($products as $product) {
+                    $existingCategory->list_products[] = $product;
+                }
+            } else {
+                $newCategory = new Category($categoryName, $products);
+                $categories[] = $newCategory;
+            }
 
             $products = [];
             $_SESSION['products'] = [];
